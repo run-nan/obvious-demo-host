@@ -12,6 +12,9 @@ import App from './App'
 import store from './store'
 import router from './router'
 
+import ObviousVue from 'obvious-vue'
+import { isSelfActivate, $bus, $socket, APP_NAME } from '@/obvious'
+
 import '@/icons' // icon
 import '@/permission' // permission control
 
@@ -28,16 +31,26 @@ if (process.env.NODE_ENV === 'production') {
   mockXHR()
 }
 
-// set ElementUI lang to EN
-Vue.use(ElementUI, { locale })
-// 如果想要中文版 element-ui，按如下方式声明
-// Vue.use(ElementUI)
+document.body.innerHTML = '<div id="app"></div>'
 
-Vue.config.productionTip = false
+$bus.createApp(APP_NAME)
+  .bootstrap(async(config) => {
+    // set ElementUI lang to EN
+    Vue.use(ElementUI, { locale })
+    Vue.use(ObviousVue)
 
-new Vue({
-  el: '#app',
-  router,
-  store,
-  render: h => h(App)
-})
+    Vue.config.productionTip = false
+
+    new Vue({
+      el: '#app',
+      router,
+      store,
+      $bus,
+      $socket,
+      render: h => h(App)
+    })
+  })
+
+if (isSelfActivate) {
+  $bus.activateApp(APP_NAME)
+}
