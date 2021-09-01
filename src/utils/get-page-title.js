@@ -1,8 +1,10 @@
-import defaultSettings from '@/settings'
+import { internalBus } from '@/obvious'
 
-const title = defaultSettings.title || 'Vue Admin Template'
+const socket = internalBus.createSocket()
 
 export default function getPageTitle(pageTitle) {
+  console.log(internalBus)
+  const title = socket.getState('settings.title')
   if (pageTitle) {
     return `${pageTitle} - ${title}`
   }

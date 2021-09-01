@@ -12,8 +12,10 @@ import App from './App'
 import store from './store'
 import router from './router'
 
+import defaultSetting from './settings'
+
 import ObviousVue from 'obvious-vue'
-import { isSelfActivate, $bus, $socket, APP_NAME } from '@/obvious'
+import { isSelfActivate, $bus, $socket, APP_NAME, internalBus, initExternalState } from '@/obvious'
 
 import '@/icons' // icon
 import '@/permission' // permission control
@@ -33,15 +35,20 @@ if (process.env.NODE_ENV === 'production') {
 
 document.body.innerHTML = '<div id="app"></div>'
 
+const internalSocket = internalBus.createSocket()
+
+let vm = null
 $bus.createApp(APP_NAME)
-  .bootstrap(async(config) => {
-    // set ElementUI lang to EN
+  .bootstrap(async(config = {}) => {
+    const settings = config.settings || defaultSetting
+    const menus = config.menus || []
+    internalSocket.initState('settings', settings)
+    internalSocket.initState('menus', menus)
+    initExternalState()
     Vue.use(ElementUI, { locale })
     Vue.use(ObviousVue)
-
     Vue.config.productionTip = false
-
-    new Vue({
+    vm = new Vue({
       el: '#app',
       router,
       store,
@@ -50,7 +57,30 @@ $bus.createApp(APP_NAME)
       render: h => h(App)
     })
   })
+  .activate(async(config = {}) => {
+    config.settings && internalSocket.setState('settings', (prevSettings) => {
+      return {
+        ...prevSettings,
+        ...config.settings
+      }
+    })
+  })
+  .destroy(async() => {
+    vm.$destroy()
+  })
 
 if (isSelfActivate) {
-  $bus.activateApp(APP_NAME)
+  $bus.activateApp(APP_NAME, {
+    menus: [
+      {
+        path: '/',
+        title: 'Dashboard',
+        icon: 'el-icon-menu'
+      },
+      {
+        path: '/404',
+        title: '404'
+      }
+    ]
+  })
 }

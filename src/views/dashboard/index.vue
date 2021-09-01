@@ -1,18 +1,22 @@
 <template>
   <div class="dashboard-container">
-    <div class="dashboard-text">name: {{ name }}</div>
+    <div class="dashboard-text">Welcome: {{ name }}</div>
+    <div>{{ breadcrumb }}</div>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
 
 export default {
   name: 'Dashboard',
-  computed: {
-    ...mapGetters([
-      'name'
-    ])
+
+  obviousData: {
+    name: 'user.name',
+    breadcrumb: 'breadcrumb'
+  },
+
+  created() {
+    this.breadcrumb = [{ title: 'Dashboard', path: '/' }]
   }
 }
 </script>
