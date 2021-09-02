@@ -15,14 +15,12 @@ export const constantRoutes = [
   {
     path: '/login',
     name: 'login',
-    component: () => import('@/views/login/index'),
-    hidden: true
+    component: () => import('@/views/login/index')
   },
   {
     path: '/404',
     name: '404',
-    component: () => import('@/views/404'),
-    hidden: true
+    component: () => import('@/views/404')
   },
   {
     path: '/',
@@ -32,14 +30,16 @@ export const constantRoutes = [
       {
         path: 'dashboard',
         name: 'Dashboard',
-        component: () => import('@/views/dashboard/index'),
-        meta: { title: 'Dashboard', icon: 'dashboard' }
+        component: () => import('@/views/dashboard/index')
       },
       {
         path: ':user/:repo/*',
         name: 'microApp',
-        component: () => import('@/views/micro-app/index'),
-        hidden: true
+        component: () => import('@/views/micro-app/index')
+      },
+      {
+        path: ':user/:repo',
+        redirect: '/:user/:repo/'
       }
     ]
   },

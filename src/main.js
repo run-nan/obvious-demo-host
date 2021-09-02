@@ -16,6 +16,7 @@ import defaultSetting from './settings'
 
 import ObviousVue from 'obvious-vue'
 import { isSelfActivate, $bus, $socket, APP_NAME, internalBus, initExternalState } from '@/obvious'
+import middleware from '@/obvious/middlereware'
 
 import '@/icons' // icon
 import '@/permission' // permission control
@@ -38,6 +39,8 @@ document.body.innerHTML = '<div id="app"></div>'
 const internalSocket = internalBus.createSocket()
 
 let vm = null
+$bus.use(middleware)
+
 $bus.createApp(APP_NAME)
   .bootstrap(async(config = {}) => {
     const settings = config.settings || defaultSetting
@@ -78,8 +81,20 @@ if (isSelfActivate) {
         icon: 'el-icon-menu'
       },
       {
-        path: '/404',
-        title: '404'
+        path: '/runnan/obvious-demo-react',
+        title: 'React Demo',
+        icon: 'el-icon-grape',
+        children: [
+
+        ]
+      },
+      {
+        path: '/runnan/obvious-demo-vue',
+        title: 'Vue Demo',
+        icon: 'el-icon-cherry',
+        children: [
+
+        ]
       }
     ]
   })

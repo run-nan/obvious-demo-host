@@ -16,4 +16,3 @@ export const initExternalState = () => {
   $socket.initState('user', { name: '', avatar: '' })
   $socket.initState('breadcrumb', [])
 }
-

@@ -1,7 +1,6 @@
 <template>
   <div class="dashboard-container">
     <div class="dashboard-text">Welcome: {{ name }}</div>
-    <div>{{ breadcrumb }}</div>
   </div>
 </template>
 
@@ -16,7 +15,10 @@ export default {
   },
 
   created() {
-    this.breadcrumb = [{ title: 'Dashboard', path: '/' }]
+    this.breadcrumb = [
+      { title: 'Dashboard', path: '/dasdas/dasda/dasdas' },
+      { title: 'dasdasd', path: '/dsa/dasd/dasd' }
+    ]
   }
 }
 </script>
