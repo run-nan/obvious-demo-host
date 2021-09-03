@@ -1,16 +1,12 @@
-import { createBus, Bus } from 'obvious-core'
+import { touchBus, Bus } from 'obvious-core'
 
-let indexBus = window.__Bus__ && window.__Bus__.index
-export const isSelfActivate = !indexBus
-
-if (isSelfActivate) {
-  indexBus = createBus('index')
-}
+const [mainBus, isMainBusHost] = touchBus()
 
 export const APP_NAME = 'runnan/obvious-demo-host'
-export const $bus = indexBus
-export const $socket = indexBus.createSocket()
+export const $bus = mainBus
+export const $socket = mainBus.createSocket()
 export const internalBus = new Bus('privateByDemoHost')
+export const isHost = isMainBusHost()
 
 export const initExternalState = () => {
   $socket.initState('user', { name: '', avatar: '' })

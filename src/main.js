@@ -15,7 +15,7 @@ import router from './router'
 import defaultSetting from './settings'
 
 import ObviousVue from 'obvious-vue'
-import { isSelfActivate, $bus, $socket, APP_NAME, internalBus, initExternalState } from '@/obvious'
+import { isHost, $bus, $socket, APP_NAME, internalBus, initExternalState } from '@/obvious'
 import middleware from '@/obvious/middlereware'
 
 import '@/icons' // icon
@@ -39,7 +39,6 @@ document.body.innerHTML = '<div id="app"></div>'
 const internalSocket = internalBus.createSocket()
 
 let vm = null
-$bus.use(middleware)
 
 $bus.createApp(APP_NAME)
   .bootstrap(async(config = {}) => {
@@ -72,7 +71,8 @@ $bus.createApp(APP_NAME)
     vm.$destroy()
   })
 
-if (isSelfActivate) {
+if (isHost) {
+  $bus.use(middleware)
   $bus.activateApp(APP_NAME, {
     menus: [
       {

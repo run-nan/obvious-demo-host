@@ -1,6 +1,6 @@
 {
   "name": "obvious-demo-host",
-  "version": "4.4.0",
+  "version": "0.0.1",
   "description": "A vue admin template with Element UI & axios & iconfont & permission control & lint",
   "author": "Pan <panfree23@gmail.com>",
   "scripts": {
@@ -21,7 +21,7 @@
     "js-cookie": "2.2.0",
     "normalize.css": "7.0.0",
     "nprogress": "0.2.0",
-    "obvious-core": "0.3.0",
+    "obvious-core": "0.3.2",
     "obvious-vue": "0.2.3",
     "path-to-regexp": "2.4.0",
     "vue": "2.6.12",
