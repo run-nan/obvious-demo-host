@@ -1,16 +1,5 @@
 module.exports = {
+  title: 'Obvious Admin',
 
-  title: 'Vue Admin Template',
-
-  /**
-   * @type {boolean} true | false
-   * @description Whether fix the header
-   */
-  fixedHeader: false,
-
-  /**
-   * @type {boolean} true | false
-   * @description Whether show the logo in sidebar
-   */
-  sidebarLogo: false
+  logo: 'https://github.com/ObviousJs/obvious-core/raw/master/docs/_media/logo_transparent.svg'
 }

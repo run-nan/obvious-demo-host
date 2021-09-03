@@ -12,6 +12,12 @@ import App from './App'
 import store from './store'
 import router from './router'
 
+import defaultSetting from './settings'
+
+import ObviousVue from 'obvious-vue'
+import { isHost, $bus, $socket, APP_NAME, internalBus, initExternalState } from '@/obvious'
+import middleware from '@/obvious/middlereware'
+
 import '@/icons' // icon
 import '@/permission' // permission control
 
@@ -28,16 +34,68 @@ if (process.env.NODE_ENV === 'production') {
   mockXHR()
 }
 
-// set ElementUI lang to EN
-Vue.use(ElementUI, { locale })
-// 如果想要中文版 element-ui，按如下方式声明
-// Vue.use(ElementUI)
+document.body.innerHTML = '<div id="app"></div>'
 
-Vue.config.productionTip = false
+const internalSocket = internalBus.createSocket()
 
-new Vue({
-  el: '#app',
-  router,
-  store,
-  render: h => h(App)
-})
+let vm = null
+
+$bus.createApp(APP_NAME)
+  .bootstrap(async(config = {}) => {
+    const settings = config.settings || defaultSetting
+    const menus = config.menus || []
+    internalSocket.initState('settings', settings)
+    internalSocket.initState('menus', menus)
+    initExternalState()
+    Vue.use(ElementUI, { locale })
+    Vue.use(ObviousVue)
+    Vue.config.productionTip = false
+    vm = new Vue({
+      el: '#app',
+      router,
+      store,
+      $bus,
+      $socket,
+      render: h => h(App)
+    })
+  })
+  .activate(async(config = {}) => {
+    config.settings && internalSocket.setState('settings', (prevSettings) => {
+      return {
+        ...prevSettings,
+        ...config.settings
+      }
+    })
+  })
+  .destroy(async() => {
+    vm.$destroy()
+  })
+
+if (isHost) {
+  $bus.use(middleware)
+  $bus.activateApp(APP_NAME, {
+    menus: [
+      {
+        path: '/',
+        title: 'Dashboard',
+        icon: 'el-icon-menu'
+      },
+      {
+        path: '/runnan/obvious-demo-react',
+        title: 'React Demo',
+        icon: 'el-icon-grape',
+        children: [
+
+        ]
+      },
+      {
+        path: '/runnan/obvious-demo-vue',
+        title: 'Vue Demo',
+        icon: 'el-icon-cherry',
+        children: [
+
+        ]
+      }
+    ]
+  })
+}
