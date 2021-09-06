@@ -16,7 +16,7 @@ import defaultSetting from './settings'
 
 import ObviousVue from 'obvious-vue'
 import { isHost, $bus, $socket, APP_NAME, internalBus, initExternalState } from '@/obvious'
-import middleware from '@/obvious/middlereware'
+import importHtml from 'obvious-import-html'
 
 import '@/icons' // icon
 import '@/permission' // permission control
@@ -34,8 +34,6 @@ if (process.env.NODE_ENV === 'production') {
   mockXHR()
 }
 
-document.body.innerHTML = '<div id="app"></div>'
-
 const internalSocket = internalBus.createSocket()
 
 let vm = null
@@ -44,6 +42,11 @@ $bus.createApp(APP_NAME)
   .bootstrap(async(config = {}) => {
     const settings = config.settings || defaultSetting
     const menus = config.menus || []
+    if (!config.mountPoint) {
+      const el = document.createElement('div')
+      document.body.appendChild(el)
+      config.mountPoint = el
+    }
     internalSocket.initState('settings', settings)
     internalSocket.initState('menus', menus)
     initExternalState()
@@ -51,7 +54,7 @@ $bus.createApp(APP_NAME)
     Vue.use(ObviousVue)
     Vue.config.productionTip = false
     vm = new Vue({
-      el: '#app',
+      el: config.mountPoint,
       router,
       store,
       $bus,
@@ -72,30 +75,38 @@ $bus.createApp(APP_NAME)
   })
 
 if (isHost) {
-  $bus.use(middleware)
-  $bus.activateApp(APP_NAME, {
-    menus: [
-      {
-        path: '/',
-        title: 'Dashboard',
-        icon: 'el-icon-menu'
-      },
-      {
-        path: '/runnan/obvious-demo-react',
-        title: 'React Demo',
-        icon: 'el-icon-grape',
-        children: [
-
-        ]
-      },
-      {
-        path: '/runnan/obvious-demo-vue',
-        title: 'Vue Demo',
-        icon: 'el-icon-cherry',
-        children: [
-
-        ]
+  $bus
+    .use(importHtml())
+    .use(async(ctx, next) => {
+      const userAndRepo = ctx.name
+      const url = `https://cdn.jsdelivr.net/gh/${userAndRepo}/dist/index.html`
+      const success = await ctx.loadHtml(url)
+      if (!success) {
+        await next()
       }
-    ]
-  })
+    }).activateApp(APP_NAME, {
+      menus: [
+        {
+          path: '/',
+          title: 'Dashboard',
+          icon: 'el-icon-menu'
+        },
+        {
+          path: '/run-nan/obvious-demo-react',
+          title: 'React Demo',
+          icon: 'el-icon-grape',
+          children: [
+
+          ]
+        },
+        {
+          path: '/run-nan/obvious-demo-vite',
+          title: 'Vite Demo',
+          icon: 'el-icon-cherry',
+          children: [
+
+          ]
+        }
+      ]
+    })
 }

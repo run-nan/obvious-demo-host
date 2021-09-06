@@ -1,6 +1,7 @@
 const { run } = require('runjs')
 const chalk = require('chalk')
 const config = require('../vue.config.js')
+const cors = require('cors')
 const rawArgv = process.argv.slice(2)
 const args = rawArgv.join(' ')
 
@@ -15,6 +16,8 @@ if (process.env.npm_config_preview || rawArgv.includes('--preview')) {
   var connect = require('connect')
   var serveStatic = require('serve-static')
   const app = connect()
+
+  app.use(cors())
 
   app.use(
     publicPath,

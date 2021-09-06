@@ -15,6 +15,7 @@ export default {
 
   methods: {
     onError(error) {
+      console.log(error.message)
       if (error.message.startsWith('[obvious]')) {
         this.$router.push({ name: '404' })
       } else {

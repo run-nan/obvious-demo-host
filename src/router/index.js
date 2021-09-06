@@ -1,5 +1,9 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import Login from '@/views/login'
+import NotFound from '@/views/404'
+import Dashboard from '@/views/dashboard'
+import MicroApp from '@/views/micro-app'
 
 Vue.use(Router)
 
@@ -15,12 +19,12 @@ export const constantRoutes = [
   {
     path: '/login',
     name: 'login',
-    component: () => import('@/views/login/index')
+    component: Login
   },
   {
     path: '/404',
     name: '404',
-    component: () => import('@/views/404')
+    component: NotFound
   },
   {
     path: '/',
@@ -30,12 +34,12 @@ export const constantRoutes = [
       {
         path: 'dashboard',
         name: 'Dashboard',
-        component: () => import('@/views/dashboard/index')
+        component: Dashboard
       },
       {
         path: ':user/:repo/*',
         name: 'microApp',
-        component: () => import('@/views/micro-app/index')
+        component: MicroApp
       },
       {
         path: ':user/:repo',
@@ -44,7 +48,7 @@ export const constantRoutes = [
     ]
   },
   // 404 page must be placed at the end !!!
-  { path: '*', redirect: '/404', hidden: true }
+  { path: '*', redirect: '/404' }
 ]
 
 const createRouter = () => new Router({

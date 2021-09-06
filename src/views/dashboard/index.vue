@@ -16,8 +16,7 @@ export default {
 
   created() {
     this.breadcrumb = [
-      { title: 'Dashboard', path: '/dasdas/dasda/dasdas' },
-      { title: 'dasdasd', path: '/dsa/dasd/dasd' }
+      { title: 'Dashboard', path: '/' }
     ]
   }
 }
